@@ -15,6 +15,7 @@ public class AsyncConfig {
 
     @Bean(name = "highPriorityTaskExecutor")
     public Executor highPriorityTaskExecutor() {
+
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
         // 성능에 대한 코어 계산
@@ -24,7 +25,7 @@ public class AsyncConfig {
         // 필수 설정
         System.out.println("System cpuCore = " + cpuCores);
         executor.setCorePoolSize(threadCount);          // 최소 스레드 수
-        executor.setMaxPoolSize(threadCount  * 2);          // 최대 스레드 수
+        executor.setMaxPoolSize(threadCount * 2);          // 최대 스레드 수
         executor.setQueueCapacity(1000);       // 작업 대기열 크기
 
         // 네이밍
@@ -39,6 +40,7 @@ public class AsyncConfig {
 
     @Bean(name = "lowPriorityTaskExecutor")
     public Executor lowPriorityTaskExecutor() {
+
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
         // 필수 설정 (최소)
@@ -55,4 +57,5 @@ public class AsyncConfig {
         executor.initialize();
         return executor;
     }
+
 }

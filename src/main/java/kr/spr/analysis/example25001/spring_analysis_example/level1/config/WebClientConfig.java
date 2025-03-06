@@ -18,4 +18,5 @@ public class WebClientConfig {
                         .defaultCodecs()
                         .maxInMemorySize(10 * 1024 * 1024)); // 최대 10MB로 설정
     }
+
 }

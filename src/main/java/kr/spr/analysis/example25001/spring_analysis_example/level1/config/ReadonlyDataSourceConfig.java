@@ -1,10 +1,10 @@
 package kr.spr.analysis.example25001.spring_analysis_example.level1.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,32 +27,60 @@ import java.util.Map;
 )
 public class ReadonlyDataSourceConfig {
 
-    @Value("${spring.datasource.readonly.jdbc-url:#{null}}")
-    private String jdbcUrl;
-    @Value("${spring.datasource.readonly.username:#{null}}")
-    private String username;
-    @Value("${spring.datasource.readonly.password:#{null}}")
-    private String password;
-    @Value("${spring.datasource.readonly.driver-class-name:#{null}}")
-    private String driverClassName;
-    @Value("${spring.datasource.readonly.package-name:#{null}}")
-    private String packageName;
-    @Value("${spring.jpa.readonly.hibernate.dialect:#{null}}")
-    private String hibernateType;
+    @Value("${spring.jpa.readonly.properties.hibernate.hbm2ddl.auto}")
+    private String hbm2ddlAuto;
 
-    // 읽기 전용 DataSource 설정
+    @Value("${spring.jpa.readonly.hibernate.dialect}")
+    private String hibernateDialect;
+
+    @Value("${spring.datasource.readonly.jdbc-url}")
+    private String jdbcUrl;
+
+    @Value("${spring.datasource.readonly.username}")
+    private String username;
+
+    @Value("${spring.datasource.readonly.password}")
+    private String password;
+
+    @Value("${spring.datasource.readonly.driver-class-name}")
+    private String driverClassName;
+
+    @Value("${spring.datasource.readonly.maximum-pool-size:10}")
+    private int maximumPoolSize;
+
+    @Value("${spring.datasource.readonly.minimum-idle:2}")
+    private int minimumIdle;
+
+    @Value("${spring.datasource.readonly.idle-timeout:30000}")
+    private long idleTimeout;
+
+    @Value("${spring.datasource.readonly.max-lifetime:1800000}")
+    private long maxLifetime;
+
+    @Value("${spring.datasource.readonly.connection-timeout:30000}")
+    private long connectionTimeout;
+
+    @Value("${spring.datasource.readonly.package-name}")
+    private String packageName;
+
+
+    // HikariCP를 사용한 DataSource 설정
     @Bean(name = "readonlyDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.readonly")
     public DataSource readonlyDataSource() {
 
-        DataSource dataSource = DataSourceBuilder.create()
-                .url(jdbcUrl)
-                .username(username)
-                .password(password)
-                .driverClassName(driverClassName)
-                .build();
+        HikariConfig hikariConfig = new HikariConfig();
 
-        return dataSource;
+        hikariConfig.setJdbcUrl(jdbcUrl);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+        hikariConfig.setDriverClassName(driverClassName);
+        hikariConfig.setMaximumPoolSize(maximumPoolSize);
+        hikariConfig.setMinimumIdle(minimumIdle);
+        hikariConfig.setIdleTimeout(idleTimeout);
+        hikariConfig.setMaxLifetime(maxLifetime);
+        hikariConfig.setConnectionTimeout(connectionTimeout);
+
+        return new HikariDataSource(hikariConfig);
     }
 
     @Bean(name = "readonlyEntityManagerFactory")
@@ -60,15 +88,21 @@ public class ReadonlyDataSourceConfig {
             EntityManagerFactoryBuilder builder,
             @Qualifier("readonlyDataSource") DataSource dataSource) {
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.dialect", hibernateType); // ✅ Hibernate Dialect 추가
-
         return builder
                 .dataSource(dataSource)
-                .packages(packageName + ".entity")
+                .packages(packageName + ".entity")  // CRUD Entity 패키지
                 .persistenceUnit("readonly")
-                .properties(properties)
+                .properties(jpaProperties())
                 .build();
+    }
+
+    private Map<String, Object> jpaProperties() {
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.hbm2ddl.auto", hbm2ddlAuto);
+        properties.put("hibernate.dialect", hibernateDialect);
+
+        return properties;
     }
 
     @Bean(name = "readonlyTransactionManager")
@@ -77,4 +111,5 @@ public class ReadonlyDataSourceConfig {
 
         return new JpaTransactionManager(entityManagerFactory);
     }
+
 }

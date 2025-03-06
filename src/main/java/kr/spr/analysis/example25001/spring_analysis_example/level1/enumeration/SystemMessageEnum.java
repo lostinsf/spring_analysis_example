@@ -2,6 +2,8 @@ package kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration;
 
 public enum SystemMessageEnum {
     // 키
+    INFO(""),
+    WARN("경고가 발생하였습니다."),
     SUCCESS("요청에 성공하였습니다."),
     EXCEPTION("요청중 에러가 발생하였습니다."),
     PARSE_EXCEPTION("내부 값 데이터 변환 중 에러가 발생하였습니다."),
