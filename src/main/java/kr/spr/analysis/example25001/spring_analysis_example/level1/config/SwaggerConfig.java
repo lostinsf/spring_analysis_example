@@ -21,5 +21,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-        // 스웨거 설정
+    // 스웨거 설정
 }
