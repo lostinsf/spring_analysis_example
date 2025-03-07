@@ -1,0 +1,20 @@
+# 프로젝트 내 모든 파일에 적용
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.java]
+max_line_length = 80
+wrap_long_lines = true
+ij_java_method_call_args_wrap = wrap_always
+ij_java_method_params_wrap = wrap_always
+ij_java_annotation_wrap = wrap_always
+ij_java_keep_simple_blocks_in_one_line = false
+ij_java_keep_simple_methods_in_one_line = false
+ij_java_blank_lines_around_method = 1
+ij_java_blank_lines_around_class = 1
