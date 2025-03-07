@@ -1,4 +1,4 @@
-package kr.spr.analysis.example25001.spring_analysis_example.level2._abstract.entity;
+package kr.spr.analysis.example25001.spring_analysis_example.level2._abstract;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
@@ -36,7 +36,7 @@ public abstract class GenericEntity {
     @Lob()
     private String etc = null;
 
-    
+
     // 매서드
     // 생성이후 자동으로 날짜 등록
     @PrePersist
@@ -46,16 +46,6 @@ public abstract class GenericEntity {
 
             createdDateTime = LocalDateTime.now();
         }
-    }
-
-    public void onUpdateDateTime() {
-
-        updatedDateTime = LocalDateTime.now();
-    }
-
-    public void onDeleteDateTime() {
-
-        deletedDateTime = LocalDateTime.now();
     }
 
 }
