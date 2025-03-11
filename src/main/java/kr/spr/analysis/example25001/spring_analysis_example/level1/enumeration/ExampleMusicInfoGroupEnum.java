@@ -1,4 +1,4 @@
-package kr.spr.analysis.example25001.spring_analysis_example.level2.crud.entity._enum;
+package kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration;
 
 public enum ExampleMusicInfoGroupEnum {
 

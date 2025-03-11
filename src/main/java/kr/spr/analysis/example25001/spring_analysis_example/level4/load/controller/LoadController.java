@@ -2,6 +2,7 @@ package kr.spr.analysis.example25001.spring_analysis_example.level4.load.control
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration.SystemMessageEnum;
 import kr.spr.analysis.example25001.spring_analysis_example.level3._tool.dto.GenericResponseDTO;
 import kr.spr.analysis.example25001.spring_analysis_example.level3.load.dto.LoadMusicInfoListRequestDTO;
 import kr.spr.analysis.example25001.spring_analysis_example.level3.load.dto.LoadMusicInfoListResponseDTO;
@@ -24,37 +25,44 @@ public class LoadController {
     // API
     @GetMapping("/get/music/info/list/get_music_info_list")
     @Operation(summary = ":음악 정보 리스트 검색",
-            description = "<b>/load/get/music/info/list/get_music_info_list" +
-                    "</b><br><br>" +
-                    "<b>1. 아이디:</b> <br>" +
-                    "- load_001 <br>" +
-                    "<br>" +
-                    "<b>2. parameter 설명:</b> <br>" +
-                    "- pageNumber : 페이지 위치 <br>" +
-                    "- pageCount : 페이지 수 <br>" +
-                    "<br>"
+        description = "<b>/load/get/music/info/list/get_music_info_list" +
+            "</b><br><br>" +
+            "<b>1. 아이디:</b> <br>" +
+            "- load_001 <br>" +
+            "<br>" +
+            "<b>2. parameter 설명:</b> <br>" +
+            "- pageNumber : 페이지 위치 <br>" +
+            "- pageCount : 페이지 수 <br>" +
+            "<br>"
     )
     public GenericResponseDTO<LoadMusicInfoListResponseDTO> getListMusicInfoLoad(
 
-            @RequestParam(defaultValue = "1") int pageNumber,
-            @RequestParam(defaultValue = "20") int pageCount
+        @RequestParam(defaultValue = "0") int pageNumber,
+        @RequestParam(defaultValue = "20") int pageCount
     ) {
         // 준비
         LoadMusicInfoListResponseDTO loadMusicInfoListResponseDTO;
         LoadMusicInfoListRequestDTO loadMusicInfoListRequestDTO =
-                new LoadMusicInfoListRequestDTO();
+            new LoadMusicInfoListRequestDTO();
         loadMusicInfoListRequestDTO.setPageNumber(pageNumber);
         loadMusicInfoListRequestDTO.setPageCount(pageCount);
 
         // 시작
         loadMusicInfoListResponseDTO =
-                loadService.getLoadMusicInfoList(loadMusicInfoListRequestDTO);
+            loadService.getLoadMusicInfoList(loadMusicInfoListRequestDTO);
 
         // 완료
-        if (loadMusicInfoListResponseDTO.getLoadMusicInfoList().isEmpty()) {
+        if (loadMusicInfoListResponseDTO.getStatus() == SystemMessageEnum.FAIL) {
 
             // 실패
             return GenericResponseDTO.fail();
+
+        }
+
+        if (loadMusicInfoListResponseDTO.getStatus() == SystemMessageEnum.EMPTY) {
+
+            // 실패
+            return GenericResponseDTO.empty();
 
         }
 

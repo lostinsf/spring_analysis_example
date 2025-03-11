@@ -13,4 +13,5 @@ public class SaveMusicInfoDTO {
 
     @JsonProperty("artistName")
     private String artistName = "";
+
 }

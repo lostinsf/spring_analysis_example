@@ -1,4 +1,4 @@
-package kr.spr.analysis.example25001.spring_analysis_example.level2._abstract;
+package kr.spr.analysis.example25001.spring_analysis_example.level2._tool.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
