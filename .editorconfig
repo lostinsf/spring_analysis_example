@@ -9,7 +9,7 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.java]
-max_line_length = 80
+max_line_length = 120
 wrap_long_lines = true
 ij_java_method_call_args_wrap = wrap_always
 ij_java_method_params_wrap = wrap_always

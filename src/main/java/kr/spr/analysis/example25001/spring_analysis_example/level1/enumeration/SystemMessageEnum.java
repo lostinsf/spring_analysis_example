@@ -3,6 +3,7 @@ package kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration;
 public enum SystemMessageEnum {
     // 키
     INFO(""),
+    NULL("null"),
     WARN("경고가 발생하였습니다."),
     EMPTY("값이 비어 있습니다."),
     SUCCESS("요청에 성공하였습니다."),
@@ -15,6 +16,7 @@ public enum SystemMessageEnum {
     PARAMETER_FAIL("요청한 파라미터값 형식이 잘못되어 실패하였습니다."),
     NETWORK_FAIL("네트워크 장애가 발생하여 실패하였습니다."),
     DATABASE_FAIL("데이터베이스 장애가 발생하여 실패하었습니다."),
+    UNIQUE_FAIL("데이터베이스 저장 중 유니크값 중복 발생으로 실패하었습니다."),
     WAIT("잠시만 기다려 주세요."),
     TEST("현재 테스트 중 입니다."),
     ETC("기타");

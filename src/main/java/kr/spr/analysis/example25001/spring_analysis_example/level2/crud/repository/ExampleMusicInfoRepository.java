@@ -9,7 +9,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ExampleMusicInfoRepository extends JpaRepository<ExampleMusicInfoEntity, Long> {
+public interface ExampleMusicInfoRepository extends
+    JpaRepository<ExampleMusicInfoEntity, Long> {
 
     @NonNull
     public Page<ExampleMusicInfoEntity> findAll(@Nullable Pageable pageable);
@@ -18,7 +19,9 @@ public interface ExampleMusicInfoRepository extends JpaRepository<ExampleMusicIn
     public Page<ExampleMusicInfoEntity> findByDeletedDateTimeIsNull(@Nullable Pageable pageable);
 
     @NonNull
-    public Page<ExampleMusicInfoEntity> findByTitleAndArtistNameAndDeletedDateTimeIsNull(
-            @Nullable String title, @Nullable String artistName, Pageable pageable);
+    public Page<ExampleMusicInfoEntity> findByTitleAndArtistNameAndDeletedDateTimeIsNullOrderById(
+        @Nullable String title,
+        @Nullable String artistName,
+        Pageable pageable);
 
 }

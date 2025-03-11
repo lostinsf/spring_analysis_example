@@ -1,4 +1,4 @@
-package kr.spr.analysis.example25001.spring_analysis_example.level2.crud.entity;
+package kr.spr.analysis.example25001.spring_analysis_example.level2.readonly.entity;
 
 import jakarta.persistence.*;
 import kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration.ExampleMusicInfoGroupEnum;
@@ -10,8 +10,8 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@Table(name = "example_music_info")
-public class ExampleMusicInfoEntity extends GenericEntity {
+@Table(name = "my_site_user_music_list_info")
+public class MySiteUserMusicInfoEntity extends GenericEntity {
 
     @Transient
     String entityName = this.getClass().getAnnotation(Table.class).name().toUpperCase();
@@ -26,11 +26,11 @@ public class ExampleMusicInfoEntity extends GenericEntity {
     @Column(nullable = false)
     private String groupEnum = "";
 
-    @Column()
-    private String title;
+    @Column(nullable = false)
+    private String playlistId = "";
 
     @Column()
-    private String artistName;
+    private String channelId;
 
     // 매서드
     public String getUniqueCode() {

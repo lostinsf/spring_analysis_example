@@ -13,6 +13,6 @@ import java.util.List;
 public class SaveMusicInfoListRequestDTO {
 
     @JsonProperty("list")
-    List<SaveMusicInfoDTO> saveMusicInfoList = new ArrayList<>();
+    private List<SaveMusicInfoDTO> saveMusicInfoList = new ArrayList<>();
 
 }

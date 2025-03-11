@@ -35,45 +35,68 @@ public class LoadService {
         try {
 
             Pageable pageable = PageRequest.of(
-                    loadMusicInfoListRequestDTO.getPageNumber(), loadMusicInfoListRequestDTO.getPageCount()
+                loadMusicInfoListRequestDTO.getPageNumber(),
+                loadMusicInfoListRequestDTO.getPageCount()
             );
 
-            Page<ExampleMusicInfoEntity> exampleMusicInfoEntityPage = exampleMusicInfoRepository.findByDeletedDateTimeIsNull(pageable);
+            Page<ExampleMusicInfoEntity> exampleMusicInfoEntityPage =
+                exampleMusicInfoRepository.findByDeletedDateTimeIsNull(pageable);
 
-            _addListLoadMusicInfoDTOFromEntityPage(loadMusicInfoDTOList, exampleMusicInfoEntityPage);
+            _addListLoadMusicInfoDTOFromEntityPage(loadMusicInfoDTOList,
+                exampleMusicInfoEntityPage);
 
+            loadMusicInfoListResponseDTO.setTotalPageNum(
+                (int) Math.ceil((double) exampleMusicInfoEntityPage.getTotalPages() / loadMusicInfoListRequestDTO.getPageCount())
+            );
             loadMusicInfoListResponseDTO.setLoadMusicInfoList(loadMusicInfoDTOList);
+
+            if (loadMusicInfoDTOList.isEmpty()) {
+
+                SystemMessageUtil.printSystemMessage(
+                    SystemMessageEnum.EMPTY,
+                    ": getLoadMusicInfoList_001 "
+                );
+
+                // 실패
+                loadMusicInfoListResponseDTO.setStatus(SystemMessageEnum.EMPTY);
+                return loadMusicInfoListResponseDTO;
+            }
 
         } catch (Exception e) {
 
             SystemMessageUtil.printSystemMessageAndException(
-                    SystemMessageEnum.EXCEPTION, ": getLoadMusicInfoList_001 ", e
+                SystemMessageEnum.EXCEPTION,
+                ": getLoadMusicInfoList_001 ",
+                e
             );
 
             // 실패
-            return null;
+            return loadMusicInfoListResponseDTO;
         }
 
         // 성공
+        loadMusicInfoListResponseDTO.setStatus(SystemMessageEnum.SUCCESS);
         return loadMusicInfoListResponseDTO;
     }
 
     private void _addListLoadMusicInfoDTOFromEntityPage(
-            List<LoadMusicInfoDTO> loadMusicInfoDTOList, Page<ExampleMusicInfoEntity> exampleMusicInfoEntityPage) {
+        List<LoadMusicInfoDTO> loadMusicInfoDTOList,
+        Page<ExampleMusicInfoEntity> exampleMusicInfoEntityPage) {
 
         for (ExampleMusicInfoEntity exampleMusicInfoEntityItem : exampleMusicInfoEntityPage) {
 
             LoadMusicInfoDTO loadMusicInfoDTO = new LoadMusicInfoDTO();
 
             loadMusicInfoDTO.setTitle(
-                    exampleMusicInfoEntityItem.getTitle()
+                exampleMusicInfoEntityItem.getTitle()
             );
 
             loadMusicInfoDTO.setArtistName(
-                    exampleMusicInfoEntityItem.getArtistName()
+                exampleMusicInfoEntityItem.getArtistName()
             );
 
             loadMusicInfoDTOList.add(loadMusicInfoDTO);
         }
     }
+
 }
