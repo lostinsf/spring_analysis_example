@@ -51,7 +51,7 @@ public class SaveService {
 
                 Page<ExampleMusicInfoEntity> exampleMusicInfoEntityPage =
                     exampleMusicInfoRepository
-                        .findByTitleAndArtistNameAndDeletedDateTimeIsNullOrderById(saveMusicInfoDTOItem.getTitle(),
+                        .findByTitleAndArtistNameAndDeletedDateTimeIsNullOrderById(saveMusicInfoDTOItem.getMusicTitle(),
                             saveMusicInfoDTOItem.getArtistName(),
                             pageable);
 
@@ -190,7 +190,7 @@ public class SaveService {
                 new ExampleMusicInfoEntity();
 
             exampleMusicInfoEntity.setArtistName(saveMusicInfoDTOItem.getArtistName());
-            exampleMusicInfoEntity.setTitle(saveMusicInfoDTOItem.getTitle());
+            exampleMusicInfoEntity.setMusicTitle(saveMusicInfoDTOItem.getMusicTitle());
 
             createExampleMusicInfoEntityList.add(exampleMusicInfoEntity);
         }
@@ -232,7 +232,7 @@ public class SaveService {
 
                 Page<ExampleMusicInfoEntity> exampleMusicInfoEntityPage =
                     exampleMusicInfoRepository
-                        .findByTitleAndArtistNameAndDeletedDateTimeIsNullOrderById(saveMusicInfoDTOItem.getTitle(),
+                        .findByTitleAndArtistNameAndDeletedDateTimeIsNullOrderById(saveMusicInfoDTOItem.getMusicTitle(),
                             saveMusicInfoDTOItem.getArtistName(),
                             pageable);
 

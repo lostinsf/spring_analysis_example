@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class YoutubeItemSnippetDTO {
+public class CollectionYoutubeItemSnippetDTO {
 
     @JsonProperty("channelId")
     private String channelId;

@@ -27,7 +27,7 @@ public class ExampleMusicInfoEntity extends GenericEntity {
     private String groupEnum = "";
 
     @Column()
-    private String title;
+    private String musicTitle;
 
     @Column()
     private String artistName;

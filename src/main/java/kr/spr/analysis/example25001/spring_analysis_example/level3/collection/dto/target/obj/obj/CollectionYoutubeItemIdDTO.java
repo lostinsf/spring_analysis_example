@@ -6,10 +6,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class YoutubeItemIdDTO {
+public class CollectionYoutubeItemIdDTO {
 
 
     @JsonProperty("playlistId")
     private String playlistId;
-    
+
 }

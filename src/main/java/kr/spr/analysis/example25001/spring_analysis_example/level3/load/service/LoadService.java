@@ -87,8 +87,8 @@ public class LoadService {
 
             LoadMusicInfoDTO loadMusicInfoDTO = new LoadMusicInfoDTO();
 
-            loadMusicInfoDTO.setTitle(
-                exampleMusicInfoEntityItem.getTitle()
+            loadMusicInfoDTO.setMusicTitle(
+                exampleMusicInfoEntityItem.getMusicTitle()
             );
 
             loadMusicInfoDTO.setArtistName(

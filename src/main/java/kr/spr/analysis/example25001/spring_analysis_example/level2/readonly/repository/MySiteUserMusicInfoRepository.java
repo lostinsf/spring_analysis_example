@@ -23,9 +23,4 @@ public interface MySiteUserMusicInfoRepository extends
         @Nullable String channelId,
         Pageable pageable);
 
-    @NonNull
-    public Page<MySiteUserMusicInfoEntity> findByPlaylistIdAndDeletedDateTimeIsNullOrderById(
-        @Nullable String playlistId,
-        Pageable pageable);
-
 }
