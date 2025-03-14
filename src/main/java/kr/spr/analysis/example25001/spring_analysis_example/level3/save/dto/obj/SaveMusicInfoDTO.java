@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 public class SaveMusicInfoDTO {
 
-    @JsonProperty("title")
-    private String title = "";
+    @JsonProperty("musicTitle")
+    private String musicTitle = "";
 
     @JsonProperty("artistName")
     private String artistName = "";

@@ -26,11 +26,11 @@ public class MySiteUserMusicInfoEntity extends GenericEntity {
     @Column(nullable = false)
     private String groupEnum = "";
 
-    @Column(nullable = false)
-    private String playlistId = "";
-
     @Column()
     private String channelId;
+
+    @Column()
+    private String matchingTitle;
 
     // 매서드
     public String getUniqueCode() {
