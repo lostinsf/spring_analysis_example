@@ -9,8 +9,8 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@Table(name = "example_music_info")
-public class ExampleMusicInfoEntity extends GenericEntity {
+@Table(name = "example_youtube_music_play_list_info")
+public class ExampleMusicPlayListInfoEntity extends GenericEntity {
 
     @Transient
     String entityName = this.getClass().getAnnotation(Table.class).name().toUpperCase();
@@ -29,10 +29,28 @@ public class ExampleMusicInfoEntity extends GenericEntity {
     private String groupEnum = "";
 
     @Column()
-    private String musicTitle;
+    private int rankNumber;
 
     @Column()
-    private String artistName;
+    private String infoCode;
+
+    @Column()
+    private String infoTitle;
+
+    @Column()
+    private String playListIdCode;
+
+    @Column()
+    private String playListTitle;
+
+    @Column()
+    private String channelIdCode;
+
+    @Column()
+    private String channelTitle;
+
+    @Lob()
+    private String description;
 
 
     // uniqueCode 자동 생성

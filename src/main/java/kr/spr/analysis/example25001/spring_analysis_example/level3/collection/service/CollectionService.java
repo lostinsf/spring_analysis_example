@@ -1,17 +1,18 @@
 package kr.spr.analysis.example25001.spring_analysis_example.level3.collection.service;
 
+import kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration.ExampleMusicInfoGroupEnum;
 import kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration.SystemMessageEnum;
 import kr.spr.analysis.example25001.spring_analysis_example.level1.util.SystemMessageUtil;
 import kr.spr.analysis.example25001.spring_analysis_example.level3._tool.service.WebClientService;
-import kr.spr.analysis.example25001.spring_analysis_example.level3.collection.dto.target.CollectionYoutubeItemListDTO;
-import kr.spr.analysis.example25001.spring_analysis_example.level3.load.service.LoadService;
-import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.service.RefineService;
+import kr.spr.analysis.example25001.spring_analysis_example.level3.collection.dto.CollectionYoutubeItemListDTO;
+import kr.spr.analysis.example25001.spring_analysis_example.level3.save.service.SaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // COLLECTION
@@ -44,15 +45,12 @@ public class CollectionService {
     private WebClientService webClientService = new WebClientService();
 
     @Autowired
-    private RefineService refineService;
-
-    @Autowired
-    private LoadService loadService;
+    private SaveService saveService;
 
 
     // 스케줄러
     // COLLECTION_001
-    // 분석정보 대상 리스트 호출 후 open api 정보 수집
+    // 분석정보 대상 리스트 호출 후 open api 정보 수집 (예시: 유튜브 뮤직리스트 인기순 탑100 playList 저장)
     @Async("highPriorityTaskExecutor") // 최상위 쓰레드 작동 처리
     @Scheduled(fixedDelay = 30000, initialDelay = 1000)
     // 스케줄러 종료 후 30초 간격으로 다시 시작, 시작 1초 딜레이
@@ -110,9 +108,6 @@ public class CollectionService {
                     return;
                 }
 
-            } else {
-
-                isFirstStart = false;
             }
 
             isOnRefreshCollection = true;
@@ -121,8 +116,7 @@ public class CollectionService {
         // 수집 로직 체크
         try {
 
-            // TODO 분석 대상 리스트 수집 다시 하기
-            getListCollectionStats();
+            scheduledListCollectionStats();
 
         } catch (Exception e) {
 
@@ -139,6 +133,7 @@ public class CollectionService {
             synchronized (lock) {
                 isOnRefreshCollection = false; // 업데이트 완료 상태
                 lastRefreshCollectionSystemTime = nowSystemTime; // 마지막 실행 시간 갱신
+                isFirstStart = false;
                 lock.notifyAll(); // 대기 중인 다른 스레드 깨우기
             }
         }
@@ -150,98 +145,105 @@ public class CollectionService {
         );
     }
 
-    private void getListCollectionStats() {
+    private void scheduledListCollectionStats() {
 
         // 준비
-//        LoadMusicInfoListRequestDTO loadMusicInfoListRequestDTO = new LoadMusicInfoListRequestDTO();
-//        LoadMusicInfoListResponseDTO loadMusicInfoListResponseDTO = new LoadMusicInfoListResponseDTO();
+        ExampleMusicInfoGroupEnum[] enumArray = ExampleMusicInfoGroupEnum.values();
+        List<CollectionYoutubeItemListDTO> nowCollectionYoutubeItemListDTOList = new ArrayList<>();
 
         // 시작
-        // 분석 대상 리스트 별 open api에서 정보 추출하기
-//        nowLoadMusicInfoDTOList = loadService.getLoadMusicInfoList();
-//
-//
-//        for (ExampleMusicInfoGroupEnum exampleMusicInfoGroupEnumItem : enumArray) {
-//            if (exampleMusicInfoGroupEnumItem != ExampleMusicInfoGroupEnum.ETC) {
-//
-//                String query = songTitle + " " + artistName;
-//
-//                String webclientInfoUrl =
-//                    "?part=snippet&type=video&maxResults=1&q=" + exampleMusicInfoGroupEnumItem.name()
-//                        + "&maxResults=100&order=relevance&key=" + baseApiKey;
-//
-//                CollectionYoutubeItemListDTO collectionYoutubeItemListDTO = webClientService.getWebClientData(
-//                    CollectionYoutubeItemListDTO.class,
-//                    baseUrl,
-//                    webclientInfoUrl
-//                );
-//
-//                nowCollectionYoutubeItemListDTOList.add(collectionYoutubeItemListDTO);
-//
-//            }
-//        }
-//
-//        // getListCollectionData_002
-//        // 현재 캐싱 리스트에 보관하기
-//        if (!nowCollectionYoutubeItemListDTOList.isEmpty()) {
-//
-//            if (targetCachingList == null) {
-//
-//                targetCachingList = nowCollectionYoutubeItemListDTOList;
-//
-//            } else {
-//
-//                isEqualTargetCachingList = !_isEqualTargetListAndNowLists(targetCachingList,
-//                    nowCollectionYoutubeItemListDTOList);
-//
-//
-//                // 보관된 수집 데이터가 현재와 같지 않다면 현재로 교체
-//                if (!isEqualTargetCachingList) {
-//
-//                    targetCachingList = nowCollectionYoutubeItemListDTOList;
-//
-//                    isEqualTargetCachingList = true;
-//                }
-//
-//            }
-//
-//            // 보관된 수집 데이터가 현재와 같지 않다면, 정제 서비스에 보관
-//            if (!isEqualTargetCachingList) {
-//                refineService.refineTargetCachingList(
-//                    targetCachingList
-//                );
-//            }
-//        }
+        // 유튜브 음악 장르별 한국 인기순 탑 50위 장르별 Open API로 리스트 호출
+        for (ExampleMusicInfoGroupEnum exampleMusicInfoGroupEnumItem : enumArray) {
+            if (exampleMusicInfoGroupEnumItem != ExampleMusicInfoGroupEnum.ETC) {
+
+                String webclientInfoUrl = "?part=snippet&type=playlist&q=" + exampleMusicInfoGroupEnumItem.name()
+                    + "&maxResults=100&order=relevance&key=" + baseApiKey;
+
+                CollectionYoutubeItemListDTO collectionYoutubeItemListDTO = webClientService.getWebClientData(
+                    CollectionYoutubeItemListDTO.class,
+                    baseUrl,
+                    webclientInfoUrl
+                );
+
+                collectionYoutubeItemListDTO.setGroupEnum(exampleMusicInfoGroupEnumItem);
+                nowCollectionYoutubeItemListDTOList.add(collectionYoutubeItemListDTO);
+
+            }
+        }
+
+        // 현재 호출한 데이터를 서버내 캐싱 리스트에 저장하기
+        if (!nowCollectionYoutubeItemListDTOList.isEmpty()) {
+
+            if (!nowCollectionYoutubeItemListDTOList.getFirst().getItems().isEmpty()) {
+
+                if (statsCachingList == null) {
+
+                    statsCachingList = nowCollectionYoutubeItemListDTOList;
+
+                } else {
+
+                    isEqualStatsCachingList = !_isEqualStatsListAndNowLists(statsCachingList,
+                        nowCollectionYoutubeItemListDTOList);
+
+
+                    // 보관된 수집 데이터가 현재와 같지 않다면 현재로 교체
+                    if (!isEqualStatsCachingList) {
+
+                        statsCachingList = nowCollectionYoutubeItemListDTOList;
+
+                        isEqualStatsCachingList = true;
+
+                        SystemMessageUtil.printSystemMessage(
+                            SystemMessageEnum.UPDATE,
+                            ": scheduledListCollectionStats"
+                        );
+                    }
+
+                }
+            }
+        }
+
+        // 보관된 수집 데이터가 최근에 계산한 동일 현재와 같지 않다면, 저장 서비스를 통해 수집한 데이터 보관
+        if (!isEqualStatsCachingList) {
+            saveService.syncStatsCachingList(
+                statsCachingList
+            );
+
+            SystemMessageUtil.printSystemMessage(
+                SystemMessageEnum.STORE,
+                ": scheduledListCollectionStats"
+            );
+        }
     }
 
-    private boolean _isEqualTargetListAndNowLists(List<CollectionYoutubeItemListDTO> targetNowCachingList,
-                                                  List<CollectionYoutubeItemListDTO> nowCollectionYoutubeItemListDTOList) {
+    private boolean _isEqualStatsListAndNowLists(List<CollectionYoutubeItemListDTO> statsNowCachingList,
+                                                 List<CollectionYoutubeItemListDTO> nowCollectionYoutubeItemListDTOList) {
 
         // null 체크
-        if (targetNowCachingList == null || nowCollectionYoutubeItemListDTOList == null) {
+        if (statsNowCachingList == null || nowCollectionYoutubeItemListDTOList == null) {
 
             return false;
         }
 
         // 길이
-        if (targetNowCachingList.size() != nowCollectionYoutubeItemListDTOList.size()) {
+        if (statsNowCachingList.size() != nowCollectionYoutubeItemListDTOList.size()) {
 
             return false;
         }
 
         // 같은 비교값 체크
-        int totalSize = targetNowCachingList.size();
+        int totalSize = statsNowCachingList.size();
         for (int i = 0; i < totalSize; i++) {
 
             // null 체크
-            if (targetNowCachingList.get(i).getItems() == null
+            if (statsNowCachingList.get(i).getItems() == null
                 || nowCollectionYoutubeItemListDTOList.get(i).getItems() == null
             ) {
                 return false;
             }
 
             // id .getPlaylistId() 체크
-            String checkText = targetNowCachingList.get(i).getItems().get(i).getId().getPlaylistId();
+            String checkText = statsNowCachingList.get(i).getItems().get(i).getId().getPlaylistId();
             String compareText = nowCollectionYoutubeItemListDTOList.get(i).getItems().get(i).getId().getPlaylistId();
             if (!checkText.equals(
                 compareText
@@ -251,7 +253,7 @@ public class CollectionService {
             }
 
             // snippet .getTitle() 체크
-            checkText = targetNowCachingList.get(i).getItems().get(i).getSnippet().getTitle();
+            checkText = statsNowCachingList.get(i).getItems().get(i).getSnippet().getTitle();
             compareText = nowCollectionYoutubeItemListDTOList.get(i).getItems().get(i).getSnippet().getTitle();
             if (!checkText.equals(
                 compareText
@@ -261,7 +263,7 @@ public class CollectionService {
             }
 
             // snippet .getTitle() 체크
-            checkText = targetNowCachingList.get(i).getItems().get(i).getSnippet().getChannelId();
+            checkText = statsNowCachingList.get(i).getItems().get(i).getSnippet().getChannelId();
             compareText = nowCollectionYoutubeItemListDTOList.get(i).getItems().get(i).getSnippet().getChannelId();
             if (!checkText.equals(
                 compareText

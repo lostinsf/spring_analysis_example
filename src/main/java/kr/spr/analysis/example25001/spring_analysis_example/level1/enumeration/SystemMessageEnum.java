@@ -2,6 +2,9 @@ package kr.spr.analysis.example25001.spring_analysis_example.level1.enumeration;
 
 public enum SystemMessageEnum {
     // 키
+    INIT("초기화에 성공하였습니다."),
+    INSERT("데이터 생성에 성공하였습니다."),
+    STORE("데이터 보관에 성공하였습니다."),
     INFO(""),
     NULL("null"),
     WARN("경고가 발생하였습니다."),
@@ -19,6 +22,7 @@ public enum SystemMessageEnum {
     UNIQUE_FAIL("데이터베이스 저장 중 유니크값 중복 발생으로 실패하었습니다."),
     WAIT("잠시만 기다려 주세요."),
     TEST("현재 테스트 중 입니다."),
+    UPDATE("업데이트가 완료되었습니다."),
     ETC("기타");
 
     // 값

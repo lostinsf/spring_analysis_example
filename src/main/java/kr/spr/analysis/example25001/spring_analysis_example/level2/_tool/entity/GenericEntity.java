@@ -38,7 +38,7 @@ public abstract class GenericEntity {
 
 
     // 매서드
-    // 생성이후 자동으로 날짜 등록
+    // 등록시 날짜 추가
     @PrePersist
     protected void onCreateDateTime() {
 

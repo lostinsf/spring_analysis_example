@@ -1,7 +1,7 @@
-package kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.target.obj.obj;
+package kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.obj.obj;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.target.obj.obj.obj.RefineYoutubeItemSnippetResourceIdDTO;
+import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.obj.obj.obj.RefineYoutubeItemSnippetResourceIdDTO;
 
 public class RefineYoutubeItemSnippetDTO {
 
