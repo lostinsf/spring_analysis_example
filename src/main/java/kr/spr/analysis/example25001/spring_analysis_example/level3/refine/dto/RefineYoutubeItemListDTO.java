@@ -1,8 +1,8 @@
-package kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.target;
+package kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.target.obj.RefineYoutubeItemDTO;
-import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.target.obj.RefineYoutubeItemPageInfoDTO;
+import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.obj.RefineYoutubeItemDTO;
+import kr.spr.analysis.example25001.spring_analysis_example.level3.refine.dto.obj.obj.RefineYoutubeItemPageInfoDTO;
 import lombok.Getter;
 import lombok.Setter;
 

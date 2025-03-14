@@ -8,6 +8,6 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL) // NULL 값인 필드는 제외
 @Setter
 @Getter
-public class SaveMusicInfoListResponseDTO extends StatusResponseDTO {
+public class SaveMusicInfoListStoreResponseDTO extends StatusResponseDTO {
 
 }

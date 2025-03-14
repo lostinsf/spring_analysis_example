@@ -10,7 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
-public class SaveMusicInfoListRequestDTO {
+public class SaveMusicInfoListStoreRequestDTO {
 
     @JsonProperty("list")
     private List<SaveMusicInfoDTO> saveMusicInfoList = new ArrayList<>();
